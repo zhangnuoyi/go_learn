@@ -17,7 +17,8 @@ func main() {
 	}
 
 	//数据库初始化
-	if err := config.InitDB(); err != nil {
+	db, err := config.InitDB()
+	if err != nil {
 		fmt.Printf("数据库初始化失败: %v", err)
 	}
 
@@ -28,8 +29,10 @@ func main() {
 
 	// 添加自定义日志中间件
 	r.Use(middleware.Logger())
+	//添加认证中间件
+	r.Use(middleware.AuthMiddleware())
 	//设置路由
-	routes.SetRoutes(r)
+	routes.SetRoutes(r, db)
 	//启动服务器
 	r.Run(fmt.Sprintf("%s:%s", config.AppConfig.Server.Host, config.AppConfig.Server.Port))
 

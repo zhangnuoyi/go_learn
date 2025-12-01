@@ -28,7 +28,8 @@ func GenerateToken(userID int64, username string) (string, error) {
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			Subject:   username,
-			Issuer:    "blog",
+			//设置签发人
+			Issuer: "blog",
 		},
 	}
 	//创建令牌

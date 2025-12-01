@@ -18,6 +18,7 @@ type BaseModel struct {
 // User 用户模型
 type User struct {
 	BaseModel
+	Username string     `json:"username" gorm:"index:idx_username;unique; type:varchar(20);not null"`
 	Mobile   string     `json:"mobile" gorm:"index:idx_mobile;unique; type:varchar(11);not null"`
 	Password string     `json:"password" gorm:"type:varchar(100);not null"`
 	Nickname string     `json:"nickname" gorm:"type:varchar(20);not null"`

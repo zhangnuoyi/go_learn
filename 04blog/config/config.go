@@ -26,11 +26,12 @@ type ServerConfig struct {
 }
 
 type DBConfig struct {
-	Host string //数据库主机
-	Port string //数据库端口
-	User string //数据库用户名
-	Pass string //数据库密码
-	Name string //数据库名
+	Host          string //数据库主机
+	Port          string //数据库端口
+	User          string //数据库用户名
+	Pass          string //数据库密码
+	Name          string //数据库名
+	IsAutoMigrate bool   //是否自动迁移数据库
 }
 
 // AppConfig 全局配置实例
@@ -44,21 +45,22 @@ func LoadConfig() error {
 			Host: "localhost",
 		},
 		DB: DBConfig{
-			Host: "172.18.112.82", //wls 虚拟化ip  数据库主机
-			Port: "3306",
-			User: "root",
-			Pass: "root",
-			Name: "blog",
+			Host:          "172.18.112.82", //wls 虚拟化ip  数据库主机
+			Port:          "3306",
+			User:          "root",
+			Pass:          "root",
+			Name:          "moon_blog",
+			IsAutoMigrate: false,
 		},
 	}
 	return nil
 }
 
-func InitDB() error {
+func InitDB() (*gorm.DB, error) {
 	// 初始化数据库连接
 	// 这里可以使用数据库驱动的连接函数，如 mysql.Open()
-	// 连接字符串格式："username:password@tcp(host:port)/dbname"
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+	// 连接字符串格式："username:password@tcp(host:port)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		AppConfig.DB.User, AppConfig.DB.Pass,
 		AppConfig.DB.Host, AppConfig.DB.Port,
 		AppConfig.DB.Name)
@@ -83,15 +85,17 @@ func InitDB() error {
 	}
 
 	// 自动迁移所有模型
-	if err := db.AutoMigrate(
-		&models.User{},
-		&models.Post{},
-		&models.Comment{},
-		&models.Like{},
-	); err != nil {
-		panic("failed to migrate database")
+	if AppConfig.DB.IsAutoMigrate {
+		if err := db.AutoMigrate(
+			&models.User{},
+			&models.Post{},
+			&models.Comment{},
+			&models.Like{},
+		); err != nil {
+			panic("failed to migrate database")
+		}
 	}
 
 	// 数据库连接成功
-	return nil
+	return db, nil
 }

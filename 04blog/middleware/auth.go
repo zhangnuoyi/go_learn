@@ -10,6 +10,11 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		//排除登录和注册接口
+		if c.Request.URL.Path == "/v1/login" || c.Request.URL.Path == "/v1/register" {
+			c.Next()
+			return
+		}
 		// 检查请求头是否包含 Authorization 字段
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
