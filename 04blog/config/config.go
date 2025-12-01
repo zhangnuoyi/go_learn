@@ -82,8 +82,13 @@ func InitDB() error {
 		panic("failed to connect database")
 	}
 
-	// 自动迁移User模型
-	if err := db.AutoMigrate(&models.User{}); err != nil {
+	// 自动迁移所有模型
+	if err := db.AutoMigrate(
+		&models.User{},
+		&models.Post{},
+		&models.Comment{},
+		&models.Like{},
+	); err != nil {
 		panic("failed to migrate database")
 	}
 
