@@ -23,12 +23,24 @@ func SetRoutes(r *gin.Engine, db *gorm.DB) {
 	userService := servers.NewUserService(userDao)
 	userApi := api.NewUserAPI(userService)
 
+	//文章相关
+	postDao := repositories.NewPostRepository(db)
+	postService := servers.NewPostService(postDao)
+	postApi := api.NewPostAPI(postService)
+
 	// 设置v1路由组
 	v1 := r.Group("/v1")
 	{
+		//用户路由
 		v1.POST("/register", userApi.RegisterUser)
 		v1.POST("/login", userApi.LoginUser)
 		v1.GET("/user", userApi.GetCurrentUser)
+
+		//文章路由
+		v1.POST("/post", postApi.SavePost)
+		v1.GET("/posts", postApi.GetPosts)
+		v1.GET("/post/:id", postApi.GetPost)
+		v1.DELETE("/post/:id", postApi.DeletePost)
 	}
 
 }

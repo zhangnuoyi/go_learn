@@ -9,8 +9,8 @@ import (
 // BaseModel 基础模型结构
 type BaseModel struct {
 	ID        int64          `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time      `json:"created_at" gorm:"column:created_at"`
-	UpdatedAt time.Time      `json:"updated_at" gorm:"column:updated_at"`
+	CreatedAt time.Time      `json:"created_at" gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt time.Time      `json:"updated_at" gorm:"column:updated_at;autoUpdateTime"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"column:deleted_at"`
 	IsDeleted bool           `json:"is_deleted" gorm:"column:is_deleted"`
 }

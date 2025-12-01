@@ -36,10 +36,12 @@ func (u *userService) RegisterUser(user *models.User) error {
 	if err == nil && existingUser != nil {
 		return errors.New("用户名已存在")
 	}
-	//检查邮箱是否存在
-	existingUser, err = u.userDao.GetUserByEmail(user.Email)
-	if err == nil && existingUser != nil {
-		return errors.New("邮箱已注册")
+	//检查邮箱是否存在（仅当邮箱不为空时）
+	if user.Email != "" {
+		existingUser, err = u.userDao.GetUserByEmail(user.Email)
+		if err == nil && existingUser != nil {
+			return errors.New("邮箱已注册")
+		}
 	}
 	//密码加密
 	user.Password = utils.GetMD5Hash(user.Password)
