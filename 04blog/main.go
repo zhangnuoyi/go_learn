@@ -2,6 +2,7 @@ package main
 
 import (
 	"04blog/config"
+	"04blog/middleware"
 	"04blog/routes"
 	"fmt"
 
@@ -22,6 +23,11 @@ func main() {
 
 	//创建gin路由
 	r := gin.Default()
+	//添加全局错误处理中间件
+	r.Use(middleware.ErrorHandler())
+
+	// 添加自定义日志中间件
+	r.Use(middleware.Logger())
 	//设置路由
 	routes.SetRoutes(r)
 	//启动服务器
