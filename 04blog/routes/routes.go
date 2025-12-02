@@ -28,6 +28,11 @@ func SetRoutes(r *gin.Engine, db *gorm.DB) {
 	postService := servers.NewPostService(postDao)
 	postApi := api.NewPostAPI(postService)
 
+	//评论相关
+	commentDao := repositories.NewCommentRepository(db)
+	commentService := servers.NewCommentService(commentDao)
+	commApi := api.NewCommentAPI(commentService)
+
 	// 设置v1路由组
 	v1 := r.Group("/v1")
 	{
@@ -41,6 +46,11 @@ func SetRoutes(r *gin.Engine, db *gorm.DB) {
 		v1.GET("/posts", postApi.GetPosts)
 		v1.GET("/post/:id", postApi.GetPost)
 		v1.DELETE("/post/:id", postApi.DeletePost)
+		//评论路由
+		v1.POST("/comment", commApi.CreateComment)
+		v1.GET("/comments/:postID", commApi.GetCommentsByPostID)
+		v1.DELETE("/comment/:commentID", commApi.DeleteComment)
+		v1.GET("/comment/:commentID", commApi.GetCommentByID)
 	}
 
 }
