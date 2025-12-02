@@ -65,7 +65,7 @@ func helloWeb() {
 	r.Run(":8081")
 }
 
-func helloWeb() {
+func helloWeb2() {
 	r := gin.Default()
 	// 定义简单的 GET 路由
 	r.GET("/hello", func(c *gin.Context) {
