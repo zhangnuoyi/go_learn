@@ -33,6 +33,10 @@ func SetRoutes(r *gin.Engine, db *gorm.DB, redisClient *redis.Client) {
 	commentDao := repositories.NewCommentRepository(db)
 	commentService := servers.NewCommentService(commentDao, redisClient)
 	commApi := api.NewCommentAPI(commentService)
+	//点赞相关
+	likeDao := repositories.NewLikeRepositoryImpl(db)
+	likeService := servers.NewLikeServiceImpl(likeDao, redisClient)
+	likeApi := api.NewLikeAPI(likeService)
 
 	// 设置v1路由组
 	v1 := r.Group("/v1")
@@ -52,6 +56,11 @@ func SetRoutes(r *gin.Engine, db *gorm.DB, redisClient *redis.Client) {
 		v1.GET("/comments/:postID", commApi.GetCommentsByPostID)
 		v1.DELETE("/comment/:commentID", commApi.DeleteComment)
 		v1.GET("/comment/:commentID", commApi.GetCommentByID)
+
+		//点赞路由
+		v1.POST("/like", likeApi.Create)
+		v1.DELETE("/like", likeApi.Delete)
+		v1.GET("/likes/:postID", likeApi.GetByArticleID)
 	}
 
 }
