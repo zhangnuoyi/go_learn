@@ -5,6 +5,8 @@ import (
 	"04blog/repositories"
 	"04blog/utils"
 	"errors"
+
+	"github.com/go-redis/redis/v8"
 )
 
 // UserService 用户服务接口
@@ -21,11 +23,12 @@ type UserService interface {
 // userService 用户服务实现
 
 type userService struct {
-	userDao repositories.UserRepository
+	userDao     repositories.UserRepository
+	redisClient *redis.Client
 }
 
-func NewUserService(userDao repositories.UserRepository) UserService {
-	return &userService{userDao: userDao}
+func NewUserService(userDao repositories.UserRepository, redisClient *redis.Client) UserService {
+	return &userService{userDao: userDao, redisClient: redisClient}
 }
 
 //用户注册

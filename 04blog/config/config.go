@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -8,6 +9,7 @@ import (
 
 	"04blog/models"
 
+	"github.com/go-redis/redis/v8"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -18,6 +20,8 @@ type Config struct {
 	Server ServerConfig
 	//数据库配置
 	DB DBConfig
+	//Redis配置
+	Redis RedisConfig
 }
 
 type ServerConfig struct {
@@ -34,8 +38,18 @@ type DBConfig struct {
 	IsAutoMigrate bool   //是否自动迁移数据库
 }
 
+type RedisConfig struct {
+	Host     string //Redis主机
+	Port     string //Redis端口
+	Password string //Redis密码
+	DB       int    //Redis数据库索引
+}
+
 // AppConfig 全局配置实例
 var AppConfig Config
+
+// RedisClient 全局Redis客户端实例
+var RedisClient *redis.Client
 
 func LoadConfig() error {
 	//走环境变量加载配置信息  如果没有 则走默认值
@@ -51,6 +65,12 @@ func LoadConfig() error {
 			Pass:          "root",
 			Name:          "moon_blog",
 			IsAutoMigrate: false,
+		},
+		Redis: RedisConfig{
+			Host:     "172.18.112.82",
+			Port:     "6379",
+			Password: "123456",
+			DB:       0,
 		},
 	}
 	return nil
@@ -98,4 +118,27 @@ func InitDB() (*gorm.DB, error) {
 
 	// 数据库连接成功
 	return db, nil
+}
+
+// InitRedis 初始化Redis连接
+func InitRedis() (*redis.Client, error) {
+	// 创建Redis客户端
+	RedisClient = redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", AppConfig.Redis.Host, AppConfig.Redis.Port),
+		Password: AppConfig.Redis.Password,
+		DB:       AppConfig.Redis.DB,
+	})
+
+	// 测试连接
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := RedisClient.Ping(ctx).Result()
+	if err != nil {
+		log.Printf("Redis连接失败: %v\n", err)
+		return nil, err
+	}
+
+	log.Println("Redis连接成功")
+	return RedisClient, nil
 }

@@ -22,6 +22,12 @@ func main() {
 		fmt.Printf("数据库初始化失败: %v", err)
 	}
 
+	//Redis初始化
+	redisClient, err := config.InitRedis()
+	if err != nil {
+		fmt.Printf("Redis初始化失败: %v", err)
+	}
+
 	//创建gin路由
 	r := gin.Default()
 	//添加全局错误处理中间件
@@ -32,7 +38,7 @@ func main() {
 	//添加认证中间件
 	r.Use(middleware.AuthMiddleware())
 	//设置路由
-	routes.SetRoutes(r, db)
+	routes.SetRoutes(r, db, redisClient)
 	//启动服务器
 	r.Run(fmt.Sprintf("%s:%s", config.AppConfig.Server.Host, config.AppConfig.Server.Port))
 

@@ -7,11 +7,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
 // gin routes 设置
-func SetRoutes(r *gin.Engine, db *gorm.DB) {
+func SetRoutes(r *gin.Engine, db *gorm.DB, redisClient *redis.Client) {
 	//后续接口路由
 	//添加一个hello路由
 	r.GET("/hello", func(c *gin.Context) {
@@ -20,17 +21,17 @@ func SetRoutes(r *gin.Engine, db *gorm.DB) {
 
 	//获取用户示例
 	userDao := repositories.NewUserRepository(db)
-	userService := servers.NewUserService(userDao)
+	userService := servers.NewUserService(userDao, redisClient)
 	userApi := api.NewUserAPI(userService)
 
 	//文章相关
 	postDao := repositories.NewPostRepository(db)
-	postService := servers.NewPostService(postDao)
+	postService := servers.NewPostService(postDao, redisClient)
 	postApi := api.NewPostAPI(postService)
 
 	//评论相关
 	commentDao := repositories.NewCommentRepository(db)
-	commentService := servers.NewCommentService(commentDao)
+	commentService := servers.NewCommentService(commentDao, redisClient)
 	commApi := api.NewCommentAPI(commentService)
 
 	// 设置v1路由组

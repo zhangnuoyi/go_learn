@@ -1,8 +1,12 @@
 package servers
 
 import (
+	"04blog/constant"
 	"04blog/models"
 	"04blog/repositories"
+	"fmt"
+
+	"github.com/go-redis/redis/v8"
 )
 
 type CommentService interface {
@@ -19,15 +23,22 @@ type CommentService interface {
 }
 
 type CommentServiceImpl struct {
-	commentDao repositories.CommentRepository
+	commentDao  repositories.CommentRepository
+	redisClient *redis.Client
 }
 
-func NewCommentService(commentDao repositories.CommentRepository) CommentService {
-	return &CommentServiceImpl{commentDao: commentDao}
+func NewCommentService(commentDao repositories.CommentRepository, redisClient *redis.Client) CommentService {
+	return &CommentServiceImpl{commentDao: commentDao, redisClient: redisClient}
 }
 
 // CreateComment 创建评论
 func (c *CommentServiceImpl) CreateComment(comment *models.Comment) error {
+	// 新增评论后，需要更新文章的评论数
+	if comment.PostID > 0 {
+		// 使用PostID构建正确的缓存键
+		c.redisClient.Incr(c.redisClient.Context(), fmt.Sprintf(constant.RedisKeyPostComments, comment.PostID))
+	}
+
 	return c.commentDao.CreateComment(comment)
 }
 
@@ -48,5 +59,12 @@ func (c *CommentServiceImpl) UpdateComment(comment *models.Comment) error {
 
 // DeleteComment 删除评论
 func (c *CommentServiceImpl) DeleteComment(commentID int64) error {
+	// 先获取评论信息，以便获取PostID
+	comment, err := c.commentDao.GetCommentByID(commentID)
+	if err == nil && comment != nil && comment.PostID > 0 {
+		// 使用PostID构建正确的缓存键
+		c.redisClient.Decr(c.redisClient.Context(), fmt.Sprintf(constant.RedisKeyPostComments, comment.PostID))
+	}
+
 	return c.commentDao.DeleteComment(commentID)
 }
