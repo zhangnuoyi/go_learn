@@ -29,7 +29,7 @@ func NewPostRepository(db *gorm.DB) PostRepository {
 	return &PostRepositoryImpl{db: db}
 }
 
-// CreatePost 新增文章
+// CreatePost 新增文章 常量
 func (p *PostRepositoryImpl) CreatePost(post *models.Post) error {
 	return p.db.Create(post).Error
 }

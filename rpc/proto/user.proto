@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package user;
+
+// User 消息定义
+type User struct {
+  uint32 id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  int32 age = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+// CreateUserRequest 创建用户请求
+type CreateUserRequest struct {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+  int32 age = 4;
+}
+
+// CreateUserResponse 创建用户响应
+type CreateUserResponse struct {
+  User user = 1;
+  string message = 2;
+}
+
+// GetUserRequest 获取用户请求
+type GetUserRequest struct {
+  uint32 id = 1;
+}
+
+// GetUserResponse 获取用户响应
+type GetUserResponse struct {
+  User user = 1;
+}
+
+// UpdateUserRequest 更新用户请求
+type UpdateUserRequest struct {
+  uint32 id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  int32 age = 5;
+}
+
+// UpdateUserResponse 更新用户响应
+type UpdateUserResponse struct {
+  User user = 1;
+  string message = 2;
+}
+
+// DeleteUserRequest 删除用户请求
+type DeleteUserRequest struct {
+  uint32 id = 1;
+}
+
+// DeleteUserResponse 删除用户响应
+type DeleteUserResponse struct {
+  string message = 1;
+}
+
+// ListUsersRequest 列出用户请求
+type ListUsersRequest struct {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+// ListUsersResponse 列出用户响应
+type ListUsersResponse struct {
+  repeated User users = 1;
+  int64 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+// UserService 用户服务定义
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+}
