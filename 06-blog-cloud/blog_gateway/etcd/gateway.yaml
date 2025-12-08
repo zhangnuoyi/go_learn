@@ -1,0 +1,62 @@
+Name: gateway
+Host: 0.0.0.0
+Port: 6666
+Jwt:
+  Secret: moon_zhang
+  ExcludePaths:
+    - /v1/user/register
+    - /v1/user/login
+Upstreams:
+  - Name: postapi  # 可选，如果未指定则使用 target
+    Http:
+      Target: localhost:9888
+      Timeout: 3000    # 单位为毫秒，默认值 3000
+    Mappings:
+      - Method: GET
+        Path: /v1/post
+      - Method: POST
+        Path: /v1/post
+      - Method: PUT
+        Path: /v1/post
+      - Method: DELETE
+        Path: /v1/post
+      - Method: GET
+        Path: /v1/post/:id
+      - Method: POST
+        Path: /v1/post/:id
+      - Method: PUT
+        Path: /v1/post/:id
+      - Method: DELETE
+        Path: /v1/post/:id
+      - Method: GET
+        Path: /v1/post/*
+      - Method: POST
+        Path: /v1/post/*
+      - Method: PUT
+        Path: /v1/post/*
+      - Method: DELETE
+        Path: /v1/post/*
+  - Name: userapi
+    Http:
+      Target: localhost:8888
+    Mappings:
+      - Method: GET
+        Path: /v1/user
+      - Method: POST
+        Path: /v1/user
+      - Method: PUT
+        Path: /v1/user
+      - Method: DELETE
+        Path: /v1/user
+      - Method: GET
+        Path: /v1/user/*
+      - Method: POST
+        Path: /v1/user/*
+      - Method: PUT
+        Path: /v1/user/*
+      - Method: DELETE
+        Path: /v1/user/*
+      - Method: POST
+        Path: /v1/user/register
+      - Method: POST
+        Path: /v1/user/login
