@@ -1,0 +1,8 @@
+Name: Post
+Host: 0.0.0.0
+Port: 9888
+PostRpc:
+  Etcd:
+    Hosts:
+    - 172.18.112.82:2379
+    Key: post.rpc

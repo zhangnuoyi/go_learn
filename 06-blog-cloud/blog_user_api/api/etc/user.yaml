@@ -1,0 +1,13 @@
+Name: User
+Host: 0.0.0.0
+Port: 8888
+
+Auth:
+  AccessSecret: abcdefghijklmnopqrstuvwxyz1234567890
+  AccessExpire: 86400
+
+UserRpc:
+  Etcd:
+    Hosts:
+    - 172.18.112.82:2379
+    Key: user.rpc

@@ -1,0 +1,106 @@
+info (
+	title:   "用户 API"
+	desc:    "实现用户的注册、登录、查询、更新等功能"
+	author:  "moon.zhang"
+	date:    "2025 年 12 月 6 日"
+	version: "v1"
+)
+
+type User {
+	Id       int64  `json:"id"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	// 年龄
+	Age int `json:"age"`
+	// 描述
+	Description string `json:"description"`
+	// 昵称
+	Nickname string `json:"nickname"`
+	// 角色
+	Role string `json:"role"`
+}
+
+type UpdateUserVo {
+	Id       int64  `json:"id"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	// 年龄
+	Age int `json:"age"`
+	// 描述
+	Description string `json:"description"`
+	// 昵称
+	Nickname string `json:"nickname"`
+	// 角色
+	Role string `json:"role"`
+}
+
+// 登录请求体 tag [json path form   ]
+type LoginDto {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// 登录响应体
+type LoginVo {
+	Token string `json:"token"`
+}
+
+// 定义查询请求体
+type QueryDto {
+	Id int64 `json:"id"`
+}
+
+// 定义查询响应体
+type QueryVo {
+	User User `json:"user"`
+}
+
+// 定义注册请求体
+type RegisterDto {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+}
+
+// 定义注册响应体
+type RegisterResponse {
+	Id    int64  `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+// 定义查询 path 参数
+type QueryPathDto {
+	Id int64 `path:"id"`
+}
+
+@server (
+	prefix:     /v1 // 对当前 Foo 语法块下的所有路由，新增 /v1 路由前缀，不需要则请删除此行
+	group:      user // 对当前 Foo 语法块下的所有路由，路由归并到 g1 目录下，不需要则请删除此行
+	timeout:    3s // 对当前 Foo 语法块下的所有路由进行超时配置，不需要则请删除此行
+	maxBytes:   1048576 // 对当前 Foo 语法块下的所有路由添加请求体大小控制，单位为 byte,goctl 版本 >= 1.5.0 才支持
+)
+service User {
+	// 定义注册接口 - 不需要认证
+	@handler register
+	post /register (RegisterDto) returns (RegisterResponse)
+
+	// 定义登录接口 - 不需要认证
+	@handler login
+	post /login (LoginDto) returns (LoginVo)
+
+	// 定义查询接口 - 需要认证
+	@handler query
+	get /query (QueryDto) returns (QueryVo)
+
+	// 定义 path 参数 - 需要认证
+	@handler pathExample
+	get /query/:id (QueryPathDto) returns (QueryVo)
+
+	// 定义只有请求体的接口，如更新信息 - 需要认证
+	@handler update
+	post /update (UpdateUserVo)
+}
+

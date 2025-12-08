@@ -1,0 +1,51 @@
+info (
+	title:   "用户 API"
+	desc:    "实现用户的注册、登录、查询、更新等功能"
+	author:  "moon.zhang"
+	date:    "2025 年 12 月 8 日"
+	version: "v1"
+)
+
+type PostDto {
+	Id        int    `json:"id,omitempty"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	Summary   string `json:"summary"`
+	Cover     string `json:"cover"`
+	ViewCount int    `json:"view_count"`
+	LikeCount int    `json:"like_count"`
+	UserID    int64  `json:"user_id"`
+}
+
+type PostVo struct {
+	Id        int    `json:"id"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	Summary   string `json:"summary"`
+	Cover     string `json:"cover"`
+	ViewCount int    `json:"view_count"`
+	LikeCount int    `json:"like_count"`
+	UserID    int64  `json:"user_id"`
+}
+
+type PathId {
+	Id int `path:"id"`
+}
+
+type MsgVo {
+	Msg string `json:"msg"`
+}
+
+service Post {
+	// 定义 path 参数
+	@handler GetPostById
+	get /:id (PathId) returns (PostVo)
+
+	// 定义 path 参数
+	@handler save
+	post /save (PostDto) returns (MsgVo)
+
+	@handler list
+	get /list returns ([]PostVo)
+}
+

@@ -1,0 +1,40 @@
+### 初始化模块
+
+1.如同
+![img.png](img.png)
+
+2.编写register.proto
+
+```protobuf
+
+syntax = "proto3";
+
+package register;
+
+// protoc-gen-go 版本大于1.4.0, proto文件需要加上go_package,否则无法生成
+option go_package = "./register";
+
+message RegReq {
+  string username = 1;
+  string password = 2;
+  CaptchaReq captcha = 3;
+  string phone = 4;
+  string promotion = 5;
+  string code = 6;
+  string country = 7;
+  string superPartner = 8;
+
+}
+
+message CaptchaReq {
+  string server = 1;
+  string token = 2;
+}
+
+message RegRes {}
+
+service Register {
+  rpc registerByPhone(RegReq) returns(RegRes);
+}
+
+```

@@ -1,0 +1,52 @@
+syntax = "proto3";
+// import "google/protobuf/empty.proto";
+
+option go_package = "./post";
+
+service PostService {
+// 新增文章
+	rpc CreatePost(PostDto ) returns (IsSuccess);
+  // 获取文章
+	rpc GetPost(PostId) returns (PostDto);
+//多条件查询文章 不传入就是查询所有
+	rpc GetPostsByConditions(PostDtoConditions) returns (PostDtoList);
+  //删除文章
+  rpc DeletePost(PostId) returns (IsSuccess);
+  //更新文章
+  rpc UpdatePost(PostDto) returns (IsSuccess);
+
+
+
+}
+message PostId {
+  int64 id = 1;
+}
+
+message IsSuccess {
+  bool success = 1;
+}
+
+//文章列表
+message PostDtoList {
+  repeated PostDto posts = 1;
+  // 总条数
+  int32 total = 2;
+}
+
+
+message PostDto {
+  string Title = 1;
+  string Content = 2;
+  string Summary = 3;
+  string Cover = 4;
+  int64 ViewCount = 5;
+  int64 LikeCount = 6;
+  int64 UserID = 7;
+  int64 ID = 8;
+}
+//文章查询条件
+message PostDtoConditions {
+  string Title = 1;
+  string Content = 2;
+  int64 UserID = 3;
+}

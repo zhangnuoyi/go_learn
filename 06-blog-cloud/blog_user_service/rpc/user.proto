@@ -1,0 +1,73 @@
+syntax = "proto3";
+// import "google/protobuf/empty.proto";
+
+option go_package = "./user";
+
+service UserService {
+  // 注册
+  rpc Register(RegisterDto) returns (UserInfoVo);
+  // 登录
+  rpc Login(LoginDto) returns (LoginResponse);
+  //分页查询用户
+  rpc ListUser(PageInfoDto) returns (UserInfoVoList);
+  //根据用户名获取用户信息
+  rpc GetUserByUsername(UsernameDto) returns (UserInfoVo);
+  //根据id查询用户
+  rpc GetUserById(IdDto) returns (UserInfoVo);
+
+  //更新用户信息
+
+  rpc UpdateUserInfo(UserInfoVo) returns (IsSuccess);
+
+
+}
+message IsSuccess {
+  bool success = 1;
+}
+
+message RegisterDto {
+  string name = 1;
+  string password = 2;
+  //电话
+  string phone = 3;
+  string email = 4;
+}
+
+message PageInfoDto {
+  uint32 pageNumber = 1;
+  uint32 pageSize = 2;
+}
+message LoginDto {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message UsernameDto {
+  string username = 1;
+}
+
+message IdDto {
+  uint32 id = 1;
+}
+
+message UserInfoVo {
+  uint32 id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  uint64 birthDay = 5;
+  uint32 gender = 6;
+  uint32 role = 7;
+  //电话
+  string phone = 8;
+
+}
+
+message UserInfoVoList {
+  int32 total = 1;
+  repeated UserInfoVo userInfoVoList = 2;
+}

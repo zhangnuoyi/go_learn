@@ -1,0 +1,9 @@
+Name: user.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+  - 172.18.112.82:2379
+  Key: user.rpc
+MySQL:
+  DSN: root:root@tcp(172.18.112.82:3306)/blog_user?charset=utf8mb4&parseTime=True&loc=Local
+  IsAutoMigrate: false

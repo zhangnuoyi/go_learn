@@ -76,10 +76,6 @@ func LoadConfig() error {
 	return nil
 }
 
-//获取链接信息
-
-var MysqlDb *gorm.DB = nil
-
 func InitDB() (*gorm.DB, error) {
 	// 初始化数据库连接
 	// 这里可以使用数据库驱动的连接函数，如 mysql.Open()
@@ -105,7 +101,7 @@ func InitDB() (*gorm.DB, error) {
 		Logger: newLogger,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect database: %w", err)
+		panic("failed to connect database")
 	}
 
 	// 自动迁移所有模型
@@ -116,10 +112,9 @@ func InitDB() (*gorm.DB, error) {
 			&models.Comment{},
 			&models.Like{},
 		); err != nil {
-			return nil, fmt.Errorf("failed to migrate database: %w", err)
+			panic("failed to migrate database")
 		}
 	}
-	MysqlDb = db
 
 	// 数据库连接成功
 	return db, nil
