@@ -1,0 +1,50 @@
+{
+  "name": "nft-auction-marketplace",
+  "version": "1.0.0",
+  "description": "NFT拍卖市场智能合约项目",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "test:nft": "npx hardhat test test/AuctionNFT.test.js",
+    "test:marketplace": "npx hardhat test test/NFTMarketplace.test.js",
+    "test:integration": "npx hardhat test test/Integration.test.js",
+    "deploy:nft": "npx hardhat run deploy/deploy-my-nft.js",
+    "deploy:marketplace": "npx hardhat run deploy/deploy-marketplace.js",
+    "deploy:nft:sepolia": "npx hardhat run deploy/deploy-my-nft.js --network sepolia",
+    "deploy:marketplace:sepolia": "npx hardhat run deploy/deploy-marketplace.js --network sepolia",
+    "console": "npx hardhat console",
+    "list-auctions": "npx hardhat run scripts/list-auctions.js",
+    "mint-nft": "npx hardhat run scripts/mint-nft.js",
+    "create-auction": "npx hardhat run scripts/create-auction.js",
+    "place-bid": "npx hardhat run scripts/place-bid.js",
+    "end-auction": "npx hardhat run scripts/end-auction.js",
+    "test:flow": "npx hardhat run scripts/test-full-flow.js --network hardhat"
+  },
+  "keywords": [
+    "nft",
+    "auction",
+    "ethereum",
+    "solidity"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@openzeppelin/hardhat-upgrades": "^2.5.1",
+    "chai": "^4.4.1",
+    "dotenv": "^17.0.0",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.8.0",
+    "hardhat-deploy": "^1.0.4",
+    "hardhat-gas-reporter": "^1.0.10"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.1.3",
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^5.4.0",
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
+    "hardhat": "^2.14.0"
+  }
+}
